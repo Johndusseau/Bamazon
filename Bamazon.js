@@ -39,7 +39,7 @@ connection.query('SELECT * FROM Products', function(err, res){
     {
       type: "input",
       name: "qty",
-      message: "How much would you like to purchase?",
+      message: "How many would you like to purchase?",
       validate: function(value){
         if(isNaN(value)){
           return false;
@@ -53,7 +53,7 @@ connection.query('SELECT * FROM Products', function(err, res){
       var howMuchToBuy = parseInt(ans.qty);
       var grandTotal = parseFloat(((res[whatToBuy].Price)*howMuchToBuy).toFixed(2));
 
-      //check if quantity is sufficient
+   
       if(res[whatToBuy].StockQuantity >= howMuchToBuy){
         //after purchase, updates quantity in Products
         connection.query("UPDATE Products SET ? WHERE ?", [
@@ -73,13 +73,11 @@ connection.query('SELECT * FROM Products', function(err, res){
             }
           }
           
-          //updates totalSales in departments table
           connection.query("UPDATE Departments SET ? WHERE ?", [
           {TotalSales: deptRes[index].TotalSales + grandTotal},
           {DepartmentName: res[whatToBuy].DepartmentName}
           ], function(err, deptRes){
               if(err) throw err;
-              //console.log("Updated Dept Sales.");
           });
         });
 
@@ -92,7 +90,6 @@ connection.query('SELECT * FROM Products', function(err, res){
 })
 }
 
-//asks if they would like to purchase another item
 function reprompt(){
   inquirer.prompt([{
     type: "confirm",
